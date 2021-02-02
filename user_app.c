@@ -105,8 +105,6 @@ void UserAppRun(void)
             u32Counter--;
         }
     }
-
-
 } /* end UserAppRun */
 
 
