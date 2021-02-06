@@ -96,14 +96,14 @@ void UserAppRun(void)
 {
     LATA=0x80;
     u32 u32Counter=0;
-    while(LATA<0xBF)
+    for(u32 u32I=0; u32I<64; u32I++)
     {
         LATA++;
-        u32Counter=300000;
-        while(u32Counter>0)
+        u32 u32Counter = 500000; 
+        while (u32Counter > 0)
         {
             u32Counter--;
-        }
+        }   
     }
 } /* end UserAppRun */
 
