@@ -1,11 +1,13 @@
 /*!*********************************************************************************************************************
 @file user_app.c                                                                
-@brief User's tasks / applications are written here.  This description
-should be replaced by something specific to the task.
+@brief 
+ * This program simply implements a 6 bit binary counter on LAT 0:5, with a 
+ * single test LED constantly high on LAT7. Everything in UserAppInitialize is just a boot up animation, 
+ * is not part of the lab and can be disregarded for for grading
 
 ------------------------------------------------------------------------------------------------------------------------
 GLOBALS
-- NONE
+- _XTAL_FREQ : states processor speed for the use of function __delay_ms()  
 
 CONSTANTS
 - NONE
@@ -22,9 +24,8 @@ PROTECTED FUNCTIONS
 
 
 **********************************************************************************************************************/
-
 #include "configuration.h"
-
+#define _XTAL_FREQ 70000000
 /***********************************************************************************************************************
 Global variable definitions with scope across entire project.
 All Global variable names shall start with "G_<type>UserApp1"
@@ -75,8 +76,7 @@ Promises:
 */
 void UserAppInitialize(void)
 {
-
-
+  
 } /* end UserAppInitialize() */
 
   
@@ -94,16 +94,25 @@ Promises:
 */
 void UserAppRun(void)
 {
-    LATA=0x80; //REQUIREMENTS THAT THE LAST LED STAYS ON; AND HAD TO BE PUT IN THE USERAPPRUN
-    u32 u32Counter=0; //THE INCREMENTAION OF THE BLINKING
-    for(u32 u32I=0; u32I<64; u32I++) //64 BITS CAUSE 2^6(6=NUMBER OF LEDS) WE NEED TO KEEP THE LAST LED ON SO JUST 6
+    static u32 u32PreviousS = 0; 
+    if(LATA == 0x7F)  //a test to see if all the LED's are on...if true it will reset the entire counter to 0
     {
-        LATA++; //IF YOU JUST HAVE THIS WITHOUT THE COUNTER THEN ALL LED WILL STAY ON CAUSE IT INCREMENTS ALL THE LEDS 1 BY ONE
-        u32 u32Counter = 200000; //THE DELAY
-        while (u32Counter > 0) //USED FOR BUFFER: THE AMOUNT OF TIME IT KILLS BEFORE IT LIGHTS UP THE NEXT LED
-        {
-            u32Counter--;
-        }   
+        LATA=0x00; //Clear Data Latch
+        LATA = 0x80; //have the last LED on when it restarts again
+    }  
+   
+    //the button has to be pushed in order for it to be 1100000
+    if(((PORTB&0x20) == 0x20) && (u32PreviousS == 0)) //RB5 is already 1 from the other .c file
+    {
+        LATA++; // increment LATA LED once
+        u32PreviousS = 1; //setting counter of the previous to 1 (set high)
+        __delay_ms(250); 
+    }
+   
+    //don't really need it...just for the sake for keeping the counter when you have pressed the button
+    if((u32PreviousS == 1))
+    {
+        u32PreviousS = 0; //setting the counter back to 0 so that the second if statement can run(set low)
     }
 } /* end UserAppRun */
 
