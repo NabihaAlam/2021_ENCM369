@@ -99,16 +99,14 @@ void UserAppRun(void)
     {
         LATA=0x00; //Clear Data Latch
         LATA = 0x80; //have the last LED on when it restarts again
-    }  
-   
+    }    
     //the button has to be pushed in order for it to be 1100000
     if(((PORTB&0x20) == 0x20) && (u32PreviousS == 0)) //RB5 is already 1 from the other .c file
     {
         LATA++; // increment LATA LED once
         u32PreviousS = 1; //setting counter of the previous to 1 (set high)
         __delay_ms(250); 
-    }
-   
+    } 
     //don't really need it...just for the sake for keeping the counter when you have pressed the button
     if((u32PreviousS == 1))
     {

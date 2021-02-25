@@ -94,7 +94,6 @@ void GpioSetup(void)
     ANSELA=0x00;    // Enable digital drivers
     LATA=0x80;      // Last LED high
 
-
     LATB=0x00;      // Clear Data Latch
     PORTB= 0x00;    // Clear register data
     TRISB= 0x30;    // Set RB 5 and 4 to input(meaning RB5=RB4=1), the rest output(meaning 0)
