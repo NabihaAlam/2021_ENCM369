@@ -96,38 +96,35 @@ Promises:
 */
 void UserAppRun(void)
 {
-    static u16 su16TimeCounter = 0x0000;
-    u8 u8LataVal;
-    static u8 su8LataDir = 0x00;   //change direction to left is 0, change direction to right is 1
-
-    if(su16TimeCounter == 0x01F4)   //1ms total
+    static u16 u16TimerCounter = 0;             
+    static u8 u8CurrentState = 0;                     
+    static u8 u8Direction = 0; //to change the direction (making it bounce back and forth))
+    
+    u8 u8LedState[] = {0x01,0x02,0x04,0x08,0x10,0x20};   //pattern
+    u16 u16LataState = 0x80&LATA;  // bitmasking masking by making 6LSB low           
+    
+    if(u16TimerCounter==200 && u8Direction == 0)//count forward and write to LATA every 200ms
     {
-        su16TimeCounter = 0x0000;  //reset counter
-        u8LataVal = LATA & 0x7F;  //bitmask LATA without Heartbeat LED
-        
-        if(su8LataDir == 0x00) //shifting left?
+        LATA = u16LataState|u8LedState[u8CurrentState];
+        u8CurrentState++;
+        if(u8CurrentState==5)//if it comes to the end of the pattern
         {
-            u8LataVal = u8LataVal << 1; //shift left
+            u8Direction = 1; //change direction in an increasing manner
         }
-        
-        if(su8LataDir == 0x01) //shifting right?
-        {
-            u8LataVal = u8LataVal >> 1;  //shift right
-        }
-        
-        LATA = u8LataVal | 0x80;  //give value back to LATA without Heartbeat LED
-        
-        if(u8LataVal == 0x20) //reached furthest left point?
-        {
-            su8LataDir = 1; //change direction to right
-        }
-        
-        if(u8LataVal == 0x01) //reached furthest right point?
-        {
-            su8LataDir = 0; //change direction to left
-        }
+        u16TimerCounter=0;
     }
-    su16TimeCounter++;
+    if(u16TimerCounter==200 && u8Direction ==1)//count backward and write to LATA every 200ms
+    {
+        LATA = u16LataState|u8LedState[u8CurrentState];
+        u8CurrentState--;
+        if(u8CurrentState==0)
+        {
+            u8Direction = 0; //change direction in an decreasing manner
+        }
+        u16TimerCounter=0;
+    }
+    
+    u16TimerCounter++; //increment counter each time through userapp/ ~1ms
 
 } /* end UserAppRun */
 

@@ -156,8 +156,7 @@ Promises:
 */
 void TimeXus(u16 u16Microseconds)
 {    
-    T0CON0 = T0CON0 & 0x7F;   // Timer0 Enable low
-    
+    T0CON0 = 0x10;   // Timer0 Disabled 
     u16 u16OverFlowCounter = 0xFFFF - u16Microseconds;  //time left before overflow
     
     u8 u8InputL = u16OverFlowCounter & 0xFF;   //bitmask 8 LSBs
@@ -165,9 +164,8 @@ void TimeXus(u16 u16Microseconds)
     TMR0L = u8InputL;  //preload Timer0 8 LSBs
     TMR0H = u8InputH; //preload Timer0 8 MSBs
     
-    PIR3 = PIR3 & 0x7F;  //sets TMR0IF low
-    
-    T0CON0 = T0CON0 | 0x80;  //sets Timer0 Enable high
+    PIR3 = PIR3 & 0x7F;  //sets TMR0IF low   
+    T0CON0 = 0x90;  // Timer0 Enable 
       
 } /* end TimeXus(u16 u16Microseconds) */
 
