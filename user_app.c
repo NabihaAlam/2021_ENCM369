@@ -133,21 +133,20 @@ void UserAppRun(void)
 /*! @privatesection */                                                                                            
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void TimeXus(u16 u16Microseconds){
-    T0CON0 &= 0x7F;                 // turns off timer
+void TimeXus(u16 u16Microseconds)
+{    
+    T0CON0 = 0x10;   // Timer0 Disabled 
+    u16 u16OverFlowCounter = 0xFFFF - u16Microseconds;  //time left before overflow
     
-    u16 u16OverFlow = 0xFFFF - u16Microseconds;     //subtract time we want to run for from max time possible
+    u8 u8InputL = u16OverFlowCounter & 0xFF;   //bitmask 8 LSBs
+    u8 u8InputH = (u16OverFlowCounter >> 8) & 0xFF;  //bitmask 8 MSBs
+    TMR0L = u8InputL;  //preload Timer0 8 LSBs
+    TMR0H = u8InputH; //preload Timer0 8 MSBs
     
-    u8 u8LowInput = u16OverFlow & 0xFF;             // create temporary variable and store lower 8 bits of our start time
-    u8 u8HighInput = (u16OverFlow>>8)& 0xFF;        // create temporary variable and store lower 8 bits of our start time
-    
-    TMR0L = u8LowInput;                 // start the lower 8 bits at predetermined time 
-    TMR0H = u8HighInput;                // start the upper 8 bits at predetermined time
-    
-    PIR3 = PIR3&0x7F;                   // clear roll over flag
-    
-    T0CON0 = T0CON0 | 0X80;             // enable timer
-}
+    PIR3 = PIR3 & 0x7F;  //sets TMR0IF low   
+    T0CON0 = 0x90;  // Timer0 Enable 
+      
+} /* end TimeXus(u16 u16Microseconds) */
 
 
 

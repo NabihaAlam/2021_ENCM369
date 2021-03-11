@@ -92,7 +92,8 @@ LATA   = 0x00;       // Clear Data Latch
 ANSELA = 0x00;       // Enable digital drivers    
 TRISA  = 0x00;       // Set RA as all outputs 
 
-DAC1CON = 0xA0;        //(1 01 00 00 0) BIT7 = 1 for EN, BIT6 = X, BIT5:4 = 10 for RA2 output only, BIT3:2 = 00 for Vdd, BIT1 = X, BIT0 = 0 for Vss 
+DAC1CON = 0xA0;      //(1 01 00 00 0) BIT7 = 1 for EN, BIT6 = X, 
+                    //BIT5:4 = 10 for RA2 output only, BIT3:2 = 00 for Vdd, BIT1 = X, BIT0 = 0 for Vss 
 } /* end GpioSetup() */
 
 
