@@ -18,9 +18,9 @@ PUBLIC FUNCTIONS
 
 PROTECTED FUNCTIONS
 - 
+ 
 
 ***********************************************************************************************************************/
-
 #include "configuration.h"
 
 /***********************************************************************************************************************
@@ -87,14 +87,12 @@ Promises:
 
 */
 void GpioSetup(void)
-{
-    TRISA = 0x00;   //set LATA to outputs
-    ANSELA = 0x00;  //set LATA to digital
-    LATA = 0x80;    //set RA7 and RA0 on, the rest off
-    
-    TRISB = 0xFF;   //set PORTB to all inputs (only care about RA5/RA4)
-    ANSELB = 0x00;  //set PORTB to digital
-    
+{  
+LATA   = 0x00;       // Clear Data Latch     
+ANSELA = 0x00;       // Enable digital drivers    
+TRISA  = 0x00;       // Set RA as all outputs 
+
+DAC1CON = 0xA0;        //(1 01 00 00 0) BIT7 = 1 for EN, BIT6 = X, BIT5:4 = 10 for RA2 output only, BIT3:2 = 00 for Vdd, BIT1 = X, BIT0 = 0 for Vss 
 } /* end GpioSetup() */
 
 
@@ -139,38 +137,6 @@ void SystemSleep(void)
 
 
 
-/*!---------------------------------------------------------------------------------------------------------------------
-@fn void TimeXus(u16 u16Microseconds)
-
-@brief Sets Timer0 to count u16Microseconds 
-
-
-Requires:
-- Timer0 configured such that each timer tick is 1 microseconds
-- u16Microseconds is the value in microseconds to time from 1 to 65,535
- * 
-Promises:
-- Pre-loads TMR0H:L to clock out desired period
-- TMROIF cleared
-- Timer0 enabled
-*/
-void TimeXus(u16 u16Microseconds)
-{    
-    T0CON0 = 0x10;   // Timer0 Disabled 
-    u16 u16OverFlowCounter = 0xFFFF - u16Microseconds;  //time left before overflow
-    
-    u8 u8InputL = u16OverFlowCounter & 0xFF;   //bitmask 8 LSBs
-    u8 u8InputH = (u16OverFlowCounter >> 8) & 0xFF;  //bitmask 8 MSBs
-    TMR0L = u8InputL;  //preload Timer0 8 LSBs
-    TMR0H = u8InputH; //preload Timer0 8 MSBs
-    
-    PIR3 = PIR3 & 0x7F;  //sets TMR0IF low   
-    T0CON0 = 0x90;  // Timer0 Enable 
-      
-} /* end TimeXus(u16 u16Microseconds) */
-
-
-
 /*--------------------------------------------------------------------------------------------------------------------*/
 /*! @publicsection */                                                                                            
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -185,6 +151,5 @@ void TimeXus(u16 u16Microseconds)
 /*--------------------------------------------------------------------------------------------------------------------*/
 /* End of File */
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 
 

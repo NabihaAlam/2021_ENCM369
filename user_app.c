@@ -75,7 +75,6 @@ Promises:
 */
 void UserAppInitialize(void)
 {
-    LATA = 0x81;  //Initialize LED
     T0CON0 = 0x90; //Enable, 16-bit, postscaler
     T0CON1 = 0x54; //Set clock source, asynchronous, prescaler
 
