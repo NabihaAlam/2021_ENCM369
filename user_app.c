@@ -96,35 +96,7 @@ Promises:
 */
 void UserAppRun(void)
 {
-    static u16 u16TimerCounter = 0;             
-    static u8 u8CurrentState = 0;                     
-    static u8 u8Direction = 0; //to change the direction (making it bounce back and forth))
     
-    u8 u8LedState[] = {0x01,0x02,0x04,0x08,0x10,0x20};   //pattern
-    u16 u16LataState = 0x80&LATA;  // bitmasking masking by making 6LSB low           
-    
-    if(u16TimerCounter==200 && u8Direction == 0)//count forward and write to LATA every 200ms
-    {
-        LATA = u16LataState|u8LedState[u8CurrentState];
-        u8CurrentState++;
-        if(u8CurrentState==5)//if it comes to the end of the pattern
-        {
-            u8Direction = 1; //change direction in an increasing manner
-        }
-        u16TimerCounter=0;
-    }
-    if(u16TimerCounter==200 && u8Direction ==1)//count backward and write to LATA every 200ms
-    {
-        LATA = u16LataState|u8LedState[u8CurrentState];
-        u8CurrentState--;
-        if(u8CurrentState==0)
-        {
-            u8Direction = 0; //change direction in an decreasing manner
-        }
-        u16TimerCounter=0;
-    }
-    
-    u16TimerCounter++; //increment counter each time through userapp/ ~1ms
 
 } /* end UserAppRun */
 
