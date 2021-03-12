@@ -120,11 +120,11 @@ void UserAppRun(void)
 
     if(u8Counter == 0xff)       // counter has reach max DAC value, reset to 0 to start sine cycle over
     {
-        DAC1DATL = UserApp_au8sinTable[u8Counter]; // update DAC with value at the top of 0->255 to preserve a value before roll over
+        DAC1DATL = UserApp_au8sinTable[u8Counter]; // update DAC with value at the top of 0->255
         u8Counter = 0;
     }
     DAC1DATL = UserApp_au8sinTable[u8Counter]; // update DAC with new sine value
-    u8Counter+=2;                              // increment DAC position in 8 bit sine signal by 4
+    u8Counter+=2;                              // increment DAC position in 8 bit sine signal by 2
 } /* end UserAppRun */
 
 
