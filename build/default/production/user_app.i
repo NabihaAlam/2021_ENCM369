@@ -27466,44 +27466,5 @@ void UserAppInitialize(void)
 # 238 "user_app.c"
 void UserAppRun(void)
 {
-    static u16 au16musicnotes[] =
-    {
-        (u16)(u16)60, (u16)(u16)60, (u16)(u16)40, (u16)(u16)40, (u16)(u16)36, (u16)(u16)36, (u16)(u16)40, (u16)(u16)45, (u16)(u16)45, (u16)(u16)47, (u16)(u16)47, (u16)(u16)53, (u16)(u16)53, (u16)(u16)60
-    };
-    static u16 au16duration[] =
-    {
-        (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 2), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 4), (u16)((u16)2048 / 2)
-    };
-    static u16 u16timeofnotes = 0;
-    static u16 u16durationoftime = 0;
-    static u16 u16durationofnote = 0;
-    static u8 u8indexofmusicnotes = 0;
-    static u8 u8diffnote = 0;
-
-        if(u16timeofnotes == u16durationoftime) {
-            if(u8diffnote) {
-                u16durationoftime = au16duration[u8indexofmusicnotes];
-                u16durationofnote = au16musicnotes[u8indexofmusicnotes] * 2;
-                u8indexofmusicnotes += 1;
-            }
-            else {
-                if(u8indexofmusicnotes < 10) {
-                    u16durationoftime = (u16)50;
-                    u16durationofnote = 32767;
-                }
-                else {
-                    u8indexofmusicnotes = 0;
-                    u16durationoftime = 100;
-                    u16durationofnote = 32767;
-                }
-            }
-            InterruptTimerXus(u16durationofnote, u8diffnote);
-            u8diffnote = !u8diffnote;
-            u16timeofnotes = 0;
-        }
-        else {
-            u16timeofnotes += 1;
-        }
-
 
 }

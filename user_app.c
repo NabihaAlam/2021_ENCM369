@@ -218,7 +218,7 @@ void UserAppInitialize(void)
     T1CON  = 0x31;  // b'00110001'
     
     // Test call to set frequency
- 
+    //InterruptTimerXus(16,1);
     
 } /* end UserAppInitialize() */
 
@@ -237,46 +237,25 @@ Promises:
 */
 void UserAppRun(void)
 {
-    static u16 au16musicnotes[] = 
-    { 
-        C4, C4, G4, G4, A4, A4, G4, F4, F4, E4, E4, D4, D4, C4
-    };
-    static u16 au16duration[] = 
+    u16 au16MusicNoteArray[] = {C4, NN, C4, NN, G4, NN, G4, NN, A4, NN, A4, NN, G4, NN, F4, NN, F4, NN, E4, NN, E4, NN, D4, NN, D4, NN, C4, NN};
+    u16 au16TimerArray[] = {N4, RT, N4, RT, N4, RT, N4, RT, N4, RT, N4, RT, N2, RT, N4, RT, N4, RT, N4, RT, N4, RT, N4, RT, N4, RT, N2, 2500};
+    static u8 u8Index = 0;
+    static u16 u16Count = 0;
+    
+    if (u16Count == au16TimerArray[u8Index])
     {
-        N4, N4, N4, N4, N4, N4, N2, N4, N4, N4, N4, N4, N4, N2
-    };
-    static u16 u16timeofnotes = 0;
-    static u16 u16durationoftime = 0;
-    static u16 u16durationofnote = 0;
-    static u8 u8indexofmusicnotes = 0;
-    static u8 u8diffnote = 0; 
-   
-        if(u16timeofnotes  == u16durationoftime) {
-            if(u8diffnote) {
-                u16durationoftime = au16duration[u8indexofmusicnotes];
-                u16durationofnote = au16musicnotes[u8indexofmusicnotes] * 2;
-                u8indexofmusicnotes += 1;
-            }
-            else {
-                if(u8indexofmusicnotes < 10) {
-                    u16durationoftime = RT;
-                    u16durationofnote = 32767; // value from void InterruptTimerXus
-                }
-                else {
-                    u8indexofmusicnotes = 0;
-                    u16durationoftime = 100;
-                    u16durationofnote = 32767;
-                }
-            }
-            InterruptTimerXus(u16durationofnote, u8diffnote);
-            u8diffnote = !u8diffnote;
-            u16timeofnotes = 0;
+        InterruptTimerXus(au16MusicNoteArray[u8Index+1],1);
+        if(u8Index == 27)
+        {
+            u8Index=0;
         }
-        else {
-            u16timeofnotes += 1;
+        else
+        {
+            u8Index++;
         }
-
-  
+        u16Count = 0;
+    }
+    u16Count++;
 } /* end UserAppRun() */
 
 
