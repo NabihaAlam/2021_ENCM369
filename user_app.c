@@ -237,6 +237,44 @@ Promises:
 */
 void UserAppRun(void)
 {
+    static u16 au16musicnotes[] = 
+    { 
+        C4, C4, G4, G4, A4, A4, G4, F4, F4, E4, E4, D4, D4, C4
+    };
+    static u16 au16duration[] = 
+    {
+        N4, N4, N4, N4, N4, N4, N2, N4, N4, N4, N4, N4, N4, N2
+    };
+    static u16 u16timeofnotes = 0;
+    static u16 u16durationoftime = 0;
+    static u16 u16durationofnote = 0;
+    static u8 u8indexofmusicnotes = 0;
+    static u8 u8diffnote = 0; 
+   
+        if(u16timeofnotes  == u16durationoftime) {
+            if(u8diffnote) {
+                u16durationoftime = au16duration[u8indexofmusicnotes];
+                u16durationofnote = au16musicnotes[u8indexofmusicnotes] * 2;
+                u8indexofmusicnotes += 1;
+            }
+            else {
+                if(u8indexofmusicnotes < 10) {
+                    u16durationoftime = RT;
+                    u16durationofnote = 32767; // value from void InterruptTimerXus
+                }
+                else {
+                    u8indexofmusicnotes = 0;
+                    u16durationoftime = 100;
+                    u16durationofnote = 32767;
+                }
+            }
+            InterruptTimerXus(u16durationofnote, u8diffnote);
+            u8diffnote = !u8diffnote;
+            u16timeofnotes = 0;
+        }
+        else {
+            u16timeofnotes += 1;
+        }
 
   
 } /* end UserAppRun() */
